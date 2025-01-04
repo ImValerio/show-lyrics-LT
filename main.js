@@ -24,6 +24,8 @@ const createLyricsBox = () => {
   lyricsBox.style.maxWidth = "700px";
   lyricsBox.style.overflowY = "scroll";
   lyricsBox.style.backgroundColor = "#FFF";
+  lyricsBox.style.padding = "0.5em";
+  lyricsBox.style.boxShadow = "rgba(0, 0, 0, 0.24) 0px 3px 8px";
 
   return lyricsBox;
 };
