@@ -32,6 +32,7 @@ const createLyricsBox = () => {
 
 const createShowLyricsBtn = () => {
   const btn = document.createElement("button");
+  btn.id = "show-lyrics-btn";
   btn.innerText = "SHOW LYRICS";
   btn.style.fontSize = "1.5em";
   btn.style.fontWeight = "bold";
@@ -44,6 +45,7 @@ const createShowLyricsBtn = () => {
   btn.style.color = "royalblue";
   btn.style.background = "white";
   btn.style.cursor = "pointer";
+  btn.style.transition = "0.5s all";
 
   return btn;
 };
@@ -67,6 +69,18 @@ const createShowLyricsBtn = () => {
     });
 
   const btn = createShowLyricsBtn();
+
+  btn.addEventListener("mouseenter", () => {
+    let btn = document.querySelector("#show-lyrics-btn");
+
+    btn.style.fontSize = "1.6em";
+  });
+
+  btn.addEventListener("mouseleave", () => {
+    let btn = document.querySelector("#show-lyrics-btn");
+
+    btn.style.fontSize = "1.5em";
+  });
 
   btn.addEventListener("click", () => {
     let currStatus = document.querySelector("#lyrics-box").style.display;
