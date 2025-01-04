@@ -14,8 +14,11 @@ function dragElement(elmnt) {
     pos2 = 0,
     pos3 = 0,
     pos4 = 0;
-
-  elmnt.onmousedown = dragMouseDown;
+  console.log(document.getElementById(elmnt.id + "-header"));
+  if (document.getElementById(elmnt.id + "-header")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown;
+  }
 
   function dragMouseDown(e) {
     e = e || window.event;
@@ -54,7 +57,7 @@ const createLyricsBox = () => {
   lyricsBox.id = "lyrics-box";
   lyricsBox.style.display = "none";
   lyricsBox.style.zIndex = 50;
-  lyricsBox.style.position = "fixed";
+  lyricsBox.style.position = "absolute";
   lyricsBox.style.right = 0;
   lyricsBox.style.bottom = 10;
   lyricsBox.style.width = "100%";
@@ -63,10 +66,37 @@ const createLyricsBox = () => {
   lyricsBox.style.maxWidth = "700px";
   lyricsBox.style.overflowY = "scroll";
   lyricsBox.style.backgroundColor = "#FFF";
-  lyricsBox.style.padding = "0.5em";
   lyricsBox.style.boxShadow = "rgba(0, 0, 0, 0.24) 0px 3px 8px";
 
+  lyricsBox.appendChild(createLyricsBoxHeader());
   return lyricsBox;
+};
+
+const createLyricsBoxHeader = () => {
+  const header = document.createElement("div");
+
+  header.id = "lyrics-box-header";
+  header.style.top = 0;
+  header.style.position = "sticky";
+  header.style.width = "100%";
+  header.style.height = "100%";
+  header.style.maxHeight = "50px";
+  header.style.backgroundColor = "royalblue";
+  header.style.cursor = "move";
+  header.style.display = "flex";
+  header.style.alignItems = "center";
+
+  const title = document.createElement("span");
+  title.innerText = "DRAG ME";
+  title.style.fontSize = "1.6em";
+  title.style.color = "white";
+
+  title.style.fontWeight = "bold";
+  title.style.letterSpacing = "0.3em";
+  title.style.padding = "0.5em";
+
+  header.appendChild(title);
+  return header;
 };
 
 const createShowLyricsBtn = () => {
@@ -131,7 +161,8 @@ const createShowLyricsBtn = () => {
     return;
   });
 
-  dragElement(lyricsBox);
   addOptions.appendChild(btn);
   addOptions.appendChild(lyricsBox);
+
+  dragElement(lyricsBox);
 })();
