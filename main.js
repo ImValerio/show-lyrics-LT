@@ -35,8 +35,9 @@ function dragElement(elmnt) {
     pos3 = 0,
     pos4 = 0;
 
-  if (getCookie("lyrics-box-pos")) {
-    const { top, left } = JSON.parse(getCookie("lyrics-box-pos"));
+  const oldBoxPos = getCookie("lyrics-box-pos");
+  if (oldBoxPos) {
+    const { top, left } = JSON.parse(oldBoxPos);
 
     elmnt.style.top = top;
     elmnt.style.left = left;
@@ -83,6 +84,29 @@ function dragElement(elmnt) {
     document.onmouseup = null;
     document.onmousemove = null;
   }
+}
+
+function scrollParentToChild(parent, child) {
+  // Where is the parent on page
+  var parentRect = parent.getBoundingClientRect();
+  // What can you see?
+  var parentViewableArea = {
+    height: parent.clientHeight,
+    width: parent.clientWidth,
+  };
+
+  // Where is the child
+  var childRect = child.getBoundingClientRect();
+
+  // Calculate the child's center relative to the parent's center
+  var childCenterY = childRect.top + childRect.height / 2;
+  var parentCenterY = parentRect.top + parentViewableArea.height / 2;
+
+  // Calculate the distance to scroll
+  var scrollY = childCenterY - parentCenterY;
+
+  // Adjust the parent's scroll position
+  parent.scrollTop += scrollY;
 }
 
 const createLyricsBox = () => {
@@ -162,10 +186,12 @@ const createShowLyricsBtn = () => {
 
   lt.game.page.lyrics.lines
     .map((el) => el.text)
-    .forEach((el) => {
+    .forEach((el, i) => {
       const p = document.createElement("p");
+      p.className = "lyric-line";
+      p.id = `line-${i}`;
       p.style.fontSize = "1.5em";
-      p.style.color = "black";
+      p.style.color = "white";
       p.style.paddingLeft = "1em";
       p.innerText = el;
       lyricsBox.appendChild(p);
@@ -199,4 +225,25 @@ const createShowLyricsBtn = () => {
   addOptions.appendChild(lyricsBox);
 
   dragElement(lyricsBox);
+
+  var trackLineVisible = new Set();
+  setInterval(() => {
+    if (trackLineVisible) [hideVisibleLines()];
+    const lineEls = document.querySelectorAll(".lyric-line");
+    const currEl = lineEls[lt.game.page.playView.playLine];
+    if (!lineEls || !lt.game.page.playView.playLine || !currEl) return;
+
+    currEl.style.color = "green";
+    currEl.style.display = "block";
+    scrollParentToChild(lyricsBox, currEl);
+    trackLineVisible.add(currEl);
+  }, 500);
+
+  const hideVisibleLines = () => {
+    trackLineVisible.forEach((el) => {
+      el.style.color = "black";
+    });
+
+    trackLineVisible.clear();
+  };
 })();
