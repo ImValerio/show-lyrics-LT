@@ -9,11 +9,7 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
-  "use strict";
-
-  const addOptions = document.querySelector("#add-options");
-
+const createLyricsBox = () => {
   const lyricsBox = document.createElement("div");
 
   lyricsBox.id = "lyrics-box";
@@ -29,17 +25,10 @@
   lyricsBox.style.overflowY = "scroll";
   lyricsBox.style.backgroundColor = "#FFF";
 
-  lt.game.page.lyrics.lines
-    .map((el) => el.text)
-    .forEach((el) => {
-      const p = document.createElement("p");
-      p.style.fontSize = "1.5em";
-      p.style.color = "black";
-      p.style.paddingLeft = "1em";
-      p.innerText = el;
-      lyricsBox.appendChild(p);
-    });
+  return lyricsBox;
+};
 
+const createShowLyricsBtn = () => {
   const btn = document.createElement("button");
   btn.innerText = "SHOW LYRICS";
   btn.style.fontSize = "1.5em";
@@ -54,6 +43,29 @@
   btn.style.background = "white";
   btn.style.cursor = "pointer";
 
+  return btn;
+};
+
+(function () {
+  "use strict";
+
+  const addOptions = document.querySelector("#add-options");
+
+  const lyricsBox = createLyricsBox();
+
+  lt.game.page.lyrics.lines
+    .map((el) => el.text)
+    .forEach((el) => {
+      const p = document.createElement("p");
+      p.style.fontSize = "1.5em";
+      p.style.color = "black";
+      p.style.paddingLeft = "1em";
+      p.innerText = el;
+      lyricsBox.appendChild(p);
+    });
+
+  const btn = createShowLyricsBtn();
+
   btn.addEventListener("click", () => {
     let currStatus = document.querySelector("#lyrics-box").style.display;
     if (currStatus === "none") {
@@ -65,6 +77,5 @@
   });
 
   addOptions.appendChild(btn);
-
   addOptions.appendChild(lyricsBox);
 })();
