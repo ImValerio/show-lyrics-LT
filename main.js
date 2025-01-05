@@ -273,9 +273,12 @@ const createShowLyricsBtn = () => {
   var trackLineVisible = new Set();
   setInterval(() => {
     if (trackLineVisible) [hideVisibleLines()];
+
     const lineEls = document.querySelectorAll(".lyric-line");
     const currEl = lineEls[lt.game.page.playView.playLine];
-    if (!lineEls || !lt.game.page.playView.playLine || !currEl) return;
+    console.log(lt.game.page.playView.playLine, currEl);
+
+    if (!lineEls || !currEl) return;
 
     currEl.style.color = "green";
     currEl.style.display = "block";
