@@ -9,6 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
+var autoScroll = true;
+
 function setCookie(name, value, days) {
   var expires = "";
   if (days) {
@@ -129,6 +131,45 @@ const createLyricsBox = () => {
   lyricsBox.appendChild(createLyricsBoxHeader());
   return lyricsBox;
 };
+function createCheckbox() {
+  // Create the input element
+  const input = document.createElement("input");
+
+  // Set attributes
+  input.type = "checkbox";
+  input.id = "switch-autoscroll";
+  input.style.transform = "scale(1.5)";
+  input.checked = true;
+  input.onclick = toggleAutoScroll;
+
+  return input;
+}
+
+const toggleAutoScroll = () => {
+  autoScroll = !autoScroll;
+  document.querySelector("#switch-autoscroll").checked = autoScroll;
+};
+
+const createSwitchAutoScroll = () => {
+  const div = document.createElement("div");
+  div.style.display = "flex";
+  div.style.justifyContent = "center";
+  div.style.alignItems = "center";
+  div.style.padding = "0.5em";
+
+  const text = document.createElement("span");
+  text.innerText = "autoscroll";
+  text.style.fontSize = "1.3em";
+  text.style.color = "white";
+  text.style.paddingRight = "0.3em";
+
+  const checkbox = createCheckbox();
+
+  div.append(text);
+  div.appendChild(checkbox);
+
+  return div;
+};
 
 const createLyricsBoxHeader = () => {
   const header = document.createElement("div");
@@ -143,6 +184,7 @@ const createLyricsBoxHeader = () => {
   header.style.cursor = "move";
   header.style.display = "flex";
   header.style.alignItems = "center";
+  header.style.justifyContent = "space-between";
 
   const title = document.createElement("span");
   title.innerText = "DRAG ME";
@@ -153,7 +195,9 @@ const createLyricsBoxHeader = () => {
   title.style.letterSpacing = "0.3em";
   title.style.padding = "0.5em";
 
+  const switchAutoScroll = createSwitchAutoScroll();
   header.appendChild(title);
+  header.appendChild(switchAutoScroll);
   return header;
 };
 
@@ -235,7 +279,9 @@ const createShowLyricsBtn = () => {
 
     currEl.style.color = "green";
     currEl.style.display = "block";
-    scrollParentToChild(lyricsBox, currEl);
+    if (autoScroll) {
+      scrollParentToChild(lyricsBox, currEl);
+    }
     trackLineVisible.add(currEl);
   }, 500);
 
