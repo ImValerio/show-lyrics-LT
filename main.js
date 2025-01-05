@@ -276,7 +276,6 @@ const createShowLyricsBtn = () => {
 
     const lineEls = document.querySelectorAll(".lyric-line");
     const currEl = lineEls[lt.game.page.playView.playLine];
-    console.log(lt.game.page.playView.playLine, currEl);
 
     if (!lineEls || !currEl) return;
 
